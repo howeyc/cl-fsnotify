@@ -8,8 +8,8 @@
 
 (constant (o-nonblock      "IN_NONBLOCK"))
 
-(constant (e-again          "EAGAIN")
-(constant (e-wouldblock     "EWOULDBLOCK")
+(constant (e-again          "EAGAIN"))
+(constant (e-wouldblock     "EWOULDBLOCK"))
 
 (constant (in-access        "IN_ACCESS"))
 (constant (in-modify        "IN_MODIFY"))
@@ -35,5 +35,5 @@
 (constant (in-oneshot       "IN_ONESHOT"))
 (constant (in-all-events    "IN_ALL_EVENTS"))
 
-(define "EVENT_SIZE" "sizeof(struct inotify_event) + NAME_MAX + 1)")
+(define "EVENT_SIZE" "(sizeof(struct inotify_event) + NAME_MAX + 1)")
 (constant (event-size       "EVENT_SIZE"))

@@ -47,19 +47,20 @@
  (:in-oneshot       #.in-oneshot)
  (:in-all-events    #.in-all-events))
 
-(defcfun ("inotify_init1" c-inotify_init) :int
-         "Creates a new inotify instance.")
+(defcfun ("inotify_init1" c-inotify-init) :int
+         "Creates a new inotify instance."
+         (flags         :int))
 
-(defcfun ("inotify_add_watch" c-inotify_add_watch) :int
+(defcfun ("inotify_add_watch" c-inotify-add-watch) :int
          "Add watch."
          (fd            :int)
          (path          :string)
          (mask          :uint32))
 
-(defcfun ("inotify_rm_watch" c-inotify_rm_watch) :int
+(defcfun ("inotify_rm_watch" c-inotify-rm-watch) :int
          "Remove watch."
          (fd            :int)
-         (wd            :uint32))
+         (wd            :int))
 
 (defcstruct struct-inotify-event
             "inotify event structure"
@@ -74,21 +75,21 @@
   :fd (c-inotify-init o-nonblock)
   :path-hash (make-hash-table :test 'equal)
   :wd-hash (make-hash-table :test 'equal)
-  :buffer (cffi:foreign-alloc :char :count event-size)))
+  :buffer (foreign-alloc :char :count event-size)))
 
 (defun close-inotify (inotify-instance)
  (let ((hash (inotify-wd-hash inotify-instance)))
   (maphash #'(lambda (wd path) 
-             (c-inotify-rm-watch wd :int)
+             (c-inotify-rm-watch (inotify-fd inotify-instance) wd)
              (remhash wd hash)) hash)
-  (cffi:foreign-free (inotify-buffer inotify-instance))
-  (cffi:foreign-funcall "close" :int (inotify-fd inotify-instance) :int)))
+  (foreign-free (inotify-buffer inotify-instance))
+  (foreign-funcall "close" :int (inotify-fd inotify-instance) :int)))
 
 (defun add-watch (inotify-instance path)
  (unless (or (null (probe-file path)) (gethash path (inotify-path-hash inotify-instance)))
   (let ((wd (c-inotify-add-watch (inotify-fd inotify-instance) path (logior in-create in-attrib in-modify in-delete in-delete-self))))
    (setf (gethash path (inotify-path-hash inotify-instance)) wd
-         (gethash wd (inotify-wd-hash inotify-instance) path)))))
+         (gethash wd (inotify-wd-hash inotify-instance)) path))))
 
 (defun del-watch (inotify-instance path)
  (let ((wd (gethash path (inotify-path-hash inotify-instance))))
@@ -99,14 +100,15 @@
 
 (defun get-event (inotify-instance)
  (let ((buffer (inotify-buffer inotify-instance)))
-  (when (zerop (cffi:foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int event-size :int))
-    (with-foreign-object (iev 'struct-inotify-event)
-      (let ((wd (foreign-slot-value buffer 'struct-inotify-event 'wd))
-            (mask (foreign-slot-value buffer 'struct-inotify-event 'mask)))
-       (cons (gethash wd (inotify-wd-hash inotify-instance)) (cffi:foreign-bitfield-symbols 'inotify-flag mask))))))
+  (when (plusp (foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int event-size :int))
+    (with-foreign-slots ((wd mask len) buffer struct-inotify-event)
+      (let ((name (if (plusp len)
+                   (foreign-string-to-lisp (foreign-slot-pointer buffer '(:struct struct-inotify-event) 'name) :max-chars len)
+                   "")))
+       (cons (concatenate 'string (gethash wd (inotify-wd-hash inotify-instance)) name) (foreign-bitfield-symbols 'inotify-flag mask)))))))
 
 (defun get-events (inotify-instance)
-  (loop as event = (get-event (inotify-fd inotify-instance))
+  (loop as event = (get-event inotify-instance)
         while event
         collect event))
 

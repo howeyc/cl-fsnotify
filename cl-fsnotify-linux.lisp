@@ -5,7 +5,7 @@
 (defvar *inotify*)
 
 (defun open-fsnotify ()
- (setf *inotify* (cl-fsnotify-inotify:make-inotify)))
+ (setf *inotify* (cl-fsnotify-inotify:open-inotify)))
 
 (defun close-fsnotify ()
   (cl-fsnotify-inotify:close-inotify *inotify*)
