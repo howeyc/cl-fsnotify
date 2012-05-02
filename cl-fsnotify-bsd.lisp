@@ -6,10 +6,10 @@
 (defvar *dir-watches* nil)
 
 (defun open-fsnotify ()
- (setf *kq* (cl-kqueue:open-kqueue)))
+ (setf *kq* (cl-fsnotify-kqueue:open-kqueue)))
 
 (defun close-fsnotify ()
- (cl-kqueue:close-kqueue *kq*)
+ (cl-fsnotify-kqueue:close-kqueue *kq*)
  (setf *kq* nil)
  (setf *dir-watches* nil))
 
@@ -22,8 +22,8 @@
        (if current-watch
         (rplacd current-watch dirlist)
         (setf *dir-watches* (nconc *dir-watches* (list (cons (namestring dir) dirlist))))))
-      (cl-kqueue:add-watch *kq* (namestring dir)))
-     (t (cl-kqueue:add-watch *kq* (namestring path))))))
+      (cl-fsnotify-kqueue:add-watch *kq* (namestring dir)))
+     (t (cl-fsnotify-kqueue:add-watch *kq* (namestring path))))))
                         
 (defmethod add-watch ((path string))
   (add-watch (pathname path)))
@@ -33,7 +33,7 @@
     (when (and dir (null (pathname-name dir))) ; Directories have no name in pathname structure
       (rem-directory dir)
       (setf *dir-watches* (remove path *dir-watches* :key #'car)))
-    (cl-kqueue:del-watch *kq* path)))
+    (cl-fsnotify-kqueue:del-watch *kq* path)))
 
 (defmethod del-watch ((path pathname))
   (del-watch (namestring path)))
@@ -59,5 +59,5 @@
 
 (defun get-events ()
   (remove-if #'null
-             (loop for event-namestring in (cl-kqueue:get-events *kq*)
+             (loop for event-namestring in (cl-fsnotify-kqueue:get-events *kq*)
                    append (get-all-fs-events event-namestring))))
