@@ -5,17 +5,15 @@ Copyright (c) 2012 Chris Howey
 Released under the ISC License.
 
 
-Depends On
-cl-kqueue  (github.com/howeyc/cl-kqueue)
-cl-inotify (github.com/Ferada/cl-inotify)
-
-Working:
-BSD
-Linux
-
-
-TODO (Maybe):
-Windows
+  Supported Common Lisp Implementations and OSs
+|===============================================|
+|   Common Lisp   |      Operating Systems      |
+| Implementations | BSD | OSX | Linux | Windows |
+------------------------------------------------|
+| CCL             |  Y  |     |   Y   |         |
+------------------------------------------------|
+| SBCL            |  Y  |     |   Y   |         |
+|===============================================|
 
 
 How it works (Also see test.lisp):
@@ -29,6 +27,13 @@ How it works (Also see test.lisp):
     ("/tmp/blah1-dir/removed" . :DELETE))
 ...
 (cl-fsnotify:close-fsnotify)
+
+
+Future Plans:
+- Expose fsnotify instance so you can have multiple open at a time.
+- Figure out what feature to use to get OSX support, as it has same
+  kqueue API as BSD systems.
+- Windows Support
 
 
 Note:

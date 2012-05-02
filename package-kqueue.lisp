@@ -2,8 +2,7 @@
 
 (defpackage #:cl-fsnotify-kqueue
   (:use #:cl
-        #:cffi
-        #-bsd (error "Package cl-fsnotify-kqueue is supported on BSDs only."))
+        #:cffi)
   (:export
     #:with-kqueue
     #:open-kqueue

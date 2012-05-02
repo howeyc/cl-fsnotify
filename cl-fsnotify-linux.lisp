@@ -23,7 +23,7 @@
 (defmethod del-watch ((path string))
   (let ((dir (first (directory (pathname path)))))
     (when (and dir (null (pathname-name dir))) ; Directories have no name in pathname structure
-      (rem-directory dir))
+      (del-directory dir))
   (cl-fsnotify-inotify:del-watch *inotify* path)))
 
 (defmethod del-watch ((path pathname))

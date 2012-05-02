@@ -4,7 +4,7 @@
   (asdf:operate 'asdf:load-op 'cffi-grovel)
   (asdf:operate 'asdf:load-op 'cffi))
 
-#+bsd
+#+(or bsd freebsd)
 (asdf:defsystem #:cl-fsnotify
   :name "fsnotify"
   :version "0.2.0"

@@ -31,7 +31,7 @@
 (defmethod del-watch ((path string))
   (let ((dir (first (directory (pathname path)))))
     (when (and dir (null (pathname-name dir))) ; Directories have no name in pathname structure
-      (rem-directory dir)
+      (del-directory dir)
       (setf *dir-watches* (remove path *dir-watches* :key #'car)))
     (cl-fsnotify-kqueue:del-watch *kq* path)))
 

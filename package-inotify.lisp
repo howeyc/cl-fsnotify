@@ -2,8 +2,7 @@
 
 (defpackage #:cl-fsnotify-inotify
   (:use #:cl
-        #:cffi
-        #-linux (error "Package cl-fsnotify-inotify is supported on Linux only."))
+        #:cffi)
   (:export
     #:with-inotify
     #:open-inotify
