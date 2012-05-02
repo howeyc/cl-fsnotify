@@ -59,13 +59,13 @@
 (defun close-kqueue (kq)
  (let ((hash (kqueue-hash kq)))
   (maphash #'(lambda (path fd) 
-             (cffi:foreign-funcall "close" :int fd :int)
+             (foreign-funcall "close" :int fd :int)
              (remhash path hash)) hash)
-  (cffi:foreign-funcall "close" :int (kqueue-fd kq) :int)))
+  (foreign-funcall "close" :int (kqueue-fd kq) :int)))
 
 (defun add-watch (kq path)
  (unless (null (probe-file path))
-  (let ((fd (or (gethash path (kqueue-hash kq)) (cffi:with-foreign-string (c-path path) (cffi:foreign-funcall "open" :string c-path :int (logior open-read-only open-non-block) :int)))))
+  (let ((fd (or (gethash path (kqueue-hash kq)) (with-foreign-string (c-path path) (foreign-funcall "open" :string c-path :int (logior open-read-only open-non-block) :int)))))
    (setf (gethash path (kqueue-hash kq)) fd)
    (with-foreign-object (kev 'struct-kevent)
      (psetf (foreign-slot-value kev 'struct-kevent 'ident) fd
@@ -86,7 +86,7 @@
             (foreign-slot-value kev 'struct-kevent 'udata) (convert-to-foreign path :string))
      (c-kevent (kqueue-fd kq) kev 1 (null-pointer) 0 (null-pointer)))
   (remhash path (kqueue-hash kq))
-  (cffi:foreign-funcall "close" :int fd :int))))
+  (foreign-funcall "close" :int fd :int))))
 
 (defun get-event (kq-fd)
   (with-foreign-objects ((kev 'struct-kevent) (timespec 'struct-timespec))
