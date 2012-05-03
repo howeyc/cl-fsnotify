@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>CL-FSNOTIFY - File system notification API</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  h3, h4 { text-decoration: underline; }
+  a { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+  a.none { text-decoration: none; padding: 0; }
+  a.none:visited { text-decoration: none; padding: 0; } 
+  a.none:hover { text-decoration: none; border: none; padding: 0; } 
+  a.none:focus { text-decoration: none; border: none; padding: 0; } 
+  a.noborder { text-decoration: none; padding: 0; } 
+  a.noborder:visited { text-decoration: none; padding: 0; } 
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  pre.none { padding:5px; background-color:#ffffff }
+  </style>
+</head>
+
+<body bgcolor=white>
+
+<h2> CL-FSNOTIFY - File system notification API</h2>
+
+<blockquote>
+<br>&nbsp;<br><h3><a name=abstract class=none>Abstract</a></h3>
+
+The code comes with
+a <a
+href="https://www.isc.org/software/license">ISC license</a> so you can basically do with it whatever you want.
+
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+<ol>
+  <li><a href="#download">Download</a>
+  <li><a href="#dictionary">The CL-FSNOTIFY dictionary</a>
+    <ol>
+      <li><a href="#add-watch"><code>add-watch</code></a>
+      <li><a href="#close-fsnotify"><code>close-fsnotify</code></a>
+      <li><a href="#del-watch"><code>del-watch</code></a>
+      <li><a href="#get-events"><code>get-events</code></a>
+      <li><a href="#open-fsnotify"><code>open-fsnotify</code></a>
+    </ol>
+  <li><a href="#ack">Acknowledgements</a>
+</ol>
+
+<br>&nbsp;<br><h3><a class=none name="download">Download</a></h3>
+
+CL-FSNOTIFY together with this documentation can be downloaded from
+quicklisp (ql:quickload :cl-fsnotify), the current version is 0.2.0.
+
+<br>&nbsp;<br><h3><a class=none name="dictionary">The CL-FSNOTIFY dictionary</a></h3>
+
+
+
+<!-- Entry for ADD-WATCH -->
+
+<p><br>[Generic function]<br><a class=none name='add-watch'><b>add-watch</b> <i>path</i> =&gt; <i>|</i></a>
+<blockquote><br>
+
+Adds a path to the notification watchlist.
+
+</blockquote>
+
+<!-- End of entry for ADD-WATCH -->
+
+
+<!-- Entry for CLOSE-FSNOTIFY -->
+
+<p><br>[Function]<br><a class=none name='close-fsnotify'><b>close-fsnotify</b> <i></i> =&gt; <i>|</i></a>
+<blockquote><br>
+
+Close a file notification instance.
+
+</blockquote>
+
+<!-- End of entry for CLOSE-FSNOTIFY -->
+
+
+<!-- Entry for DEL-WATCH -->
+
+<p><br>[Generic function]<br><a class=none name='del-watch'><b>del-watch</b> <i>path</i> =&gt; <i>|</i></a>
+<blockquote><br>
+
+Removes a path to the notification watchlist.
+
+</blockquote>
+
+<!-- End of entry for DEL-WATCH -->
+
+
+<!-- Entry for GET-EVENTS -->
+
+<p><br>[Function]<br><a class=none name='get-events'><b>get-events</b> <i></i> =&gt; <i>alist</i></a>
+<blockquote><br>
+
+Retrieve an alist of events that have occured for watched files.
+
+ Each cons is of the form (EVENT-TYPE . PATHNAME).
+ EVENT-TYPE is one of the following keywords :CREATE :MODIFY :DELETE
+ PATHNAME is pathname of the file that triggered the event.
+
+</blockquote>
+
+<!-- End of entry for GET-EVENTS -->
+
+
+<!-- Entry for OPEN-FSNOTIFY -->
+
+<p><br>[Function]<br><a class=none name='open-fsnotify'><b>open-fsnotify</b> <i></i> =&gt; <i>|</i></a>
+<blockquote><br>
+
+Create a file notification instance.
+
+</blockquote>
+
+<!-- End of entry for OPEN-FSNOTIFY -->
+
+
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+<p>
+This documentation was prepared with <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+</p>
+<p>
+$Header: /usr/local/cvsrep/documentation-template/output.lisp,v 1.17 2010/08/05 19:24:27 edi Exp $
+</body>
+</html>
