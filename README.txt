@@ -16,19 +16,6 @@ Released under the ISC License.
 |===============================================|
 
 
-How it works (Also see test.lisp):
-(cl-fsnotify:open-fsnotify)
-(cl-fsnotify:add-watch "/tmp/blah1")
-(cl-fsnotify:add-watch "/tmp/blah1-dir")
-....
-(cl-fsnotify:get-events)
-=> (("/tmp/blah1" . :MODIFY)
-    ("/tmp/blah1-dir/new" . :CREATE)
-    ("/tmp/blah1-dir/removed" . :DELETE))
-...
-(cl-fsnotify:close-fsnotify)
-
-
 Future Plans:
 - Expose fsnotify instance so you can have multiple open at a time.
 - Figure out what feature to use to get OSX support, as it has same

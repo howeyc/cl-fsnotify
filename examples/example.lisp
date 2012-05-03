@@ -2,7 +2,7 @@
 
 (use-package '#:cl-fsnotify)
 
-(defun run-test ()
+(defun run-example ()
   (ensure-directories-exist (pathname "/tmp/owned/"))
   (with-open-file (out-file-three "/tmp/owned/blah3" :direction :output :if-exists :supersede :if-does-not-exist :create)
     (format out-file-three "stuff~%")
