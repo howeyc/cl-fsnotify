@@ -2,6 +2,12 @@
 
 (in-package #:cl-fsnotify)
 
+(defgeneric add-watch (path)
+ (:documentation "Adds a path to the notification watchlist."))
+
+(defgeneric del-watch (path)
+ (:documentation "Removes a path to the notification watchlist."))
+
 (defmethod get-files-in-directory ((dir pathname))
   (directory (make-pathname :name :wild :type :wild :directory (pathname-directory dir))))
 

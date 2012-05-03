@@ -5,9 +5,11 @@
 (defvar *inotify*)
 
 (defun open-fsnotify ()
+ "Create a file notification instance."
  (setf *inotify* (cl-fsnotify-inotify:open-inotify)))
 
 (defun close-fsnotify ()
+ "Close a file notification instance."
   (cl-fsnotify-inotify:close-inotify *inotify*)
   (setf *inotify* nil))
 
@@ -35,5 +37,10 @@
         (t :MODIFY)))
 
 (defun get-events ()
+ "Retrieve an alist of events that have occured for watched files.
+
+ Each cons is of the form (EVENT-TYPE . PATHNAME).
+ EVENT-TYPE is one of the following keywords :CREATE :MODIFY :DELETE
+ PATHNAME is pathname of the file that triggered the event."
   (loop for (event-path . event-masks) in (cl-fsnotify-inotify:get-events *inotify*)
         collect (cons event-path (get-fsnotify-compatible-mask event-masks))))

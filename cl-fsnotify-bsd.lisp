@@ -6,9 +6,11 @@
 (defvar *dir-watches* nil)
 
 (defun open-fsnotify ()
+ "Create a file notification instance."
  (setf *kq* (cl-fsnotify-kqueue:open-kqueue)))
 
 (defun close-fsnotify ()
+ "Close a file notification instance."
  (cl-fsnotify-kqueue:close-kqueue *kq*)
  (setf *kq* nil)
  (setf *dir-watches* nil))
@@ -58,6 +60,11 @@
         (list (cons (pathname event-namestring) :MODIFY))))))
 
 (defun get-events ()
+ "Retrieve an alist of events that have occured for watched files.
+
+ Each cons is of the form (EVENT-TYPE . PATHNAME).
+ EVENT-TYPE is one of the following keywords :CREATE :MODIFY :DELETE
+ PATHNAME is pathname of the file that triggered the event."
   (remove-if #'null
              (loop for event-namestring in (cl-fsnotify-kqueue:get-events *kq*)
                    append (get-all-fs-events event-namestring))))
