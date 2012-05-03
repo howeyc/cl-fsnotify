@@ -52,24 +52,20 @@ href="https://www.isc.org/software/license">ISC license</a> so you can basically
 
 <br>&nbsp;<br><h3><a class=none name="download">Download</a></h3>
 
-CL-FSNOTIFY together with this documentation can be downloaded from
-quicklisp (ql:quickload :cl-fsnotify), the current version is 0.2.0.
+CL-FSNOTIFY can be downloaded from quicklisp, the current version is 0.2.0.
 
 <br>&nbsp;<br><h3><a class=none name="dictionary">The CL-FSNOTIFY dictionary</a></h3>
 
+<!-- Entry for OPEN-FSNOTIFY -->
 
-
-<!-- Entry for ADD-WATCH -->
-
-<p><br>[Generic function]<br><a class=none name='add-watch'><b>add-watch</b> <i>path</i> =&gt; <i>|</i></a>
+<p><br>[Function]<br><a class=none name='open-fsnotify'><b>open-fsnotify</b> <i></i> =&gt; <i>|</i></a>
 <blockquote><br>
 
-Adds a path to the notification watchlist.
+Create a file notification instance.
 
 </blockquote>
 
-<!-- End of entry for ADD-WATCH -->
-
+<!-- End of entry for OPEN-FSNOTIFY -->
 
 <!-- Entry for CLOSE-FSNOTIFY -->
 
@@ -81,6 +77,17 @@ Close a file notification instance.
 </blockquote>
 
 <!-- End of entry for CLOSE-FSNOTIFY -->
+
+<!-- Entry for ADD-WATCH -->
+
+<p><br>[Generic function]<br><a class=none name='add-watch'><b>add-watch</b> <i>path</i> =&gt; <i>|</i></a>
+<blockquote><br>
+
+Adds a path to the notification watchlist.
+
+</blockquote>
+
+<!-- End of entry for ADD-WATCH -->
 
 
 <!-- Entry for DEL-WATCH -->
@@ -100,27 +107,15 @@ Removes a path to the notification watchlist.
 <p><br>[Function]<br><a class=none name='get-events'><b>get-events</b> <i></i> =&gt; <i>alist</i></a>
 <blockquote><br>
 
-Retrieve an alist of events that have occured for watched files.
-
- Each cons is of the form (EVENT-TYPE . PATHNAME).
- EVENT-TYPE is one of the following keywords :CREATE :MODIFY :DELETE
- PATHNAME is pathname of the file that triggered the event.
+Retrieve an alist of events that have occured for watched files.<br>
+<br>&nbsp;<br>
+ Each cons is of the form (EVENT-TYPE . PATHNAME).<br>
+ EVENT-TYPE is one of the following keywords - :CREATE :MODIFY :DELETE<br>
+ PATHNAME is pathname of the file that triggered the event.<br>
 
 </blockquote>
 
 <!-- End of entry for GET-EVENTS -->
-
-
-<!-- Entry for OPEN-FSNOTIFY -->
-
-<p><br>[Function]<br><a class=none name='open-fsnotify'><b>open-fsnotify</b> <i></i> =&gt; <i>|</i></a>
-<blockquote><br>
-
-Create a file notification instance.
-
-</blockquote>
-
-<!-- End of entry for OPEN-FSNOTIFY -->
 
 
 <br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
