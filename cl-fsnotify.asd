@@ -7,7 +7,7 @@
 (asdf:defsystem #:cl-fsnotify
   :name "fsnotify"
   :version "0.2.0"
-  :description "Filesystem notifications"
+  :description "File system notifications"
   :author "Chris Howey <chris@howey.me>"
   :license "ISC"
   :serial t

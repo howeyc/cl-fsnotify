@@ -1,4 +1,4 @@
-cl-fsnotify is created to expose the same file monitoring API
+cl-fsnotify is created to expose the same file notification interface
 for both Linux, BSD, and possibly (in future) windows.
 
 Copyright (c) 2012 Chris Howey
