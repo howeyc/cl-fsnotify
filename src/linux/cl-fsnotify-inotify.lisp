@@ -79,9 +79,10 @@
 
 (defun close-inotify (inotify-instance)
  (let ((hash (inotify-wd-hash inotify-instance)))
-  (maphash #'(lambda (wd path) 
-             (c-inotify-rm-watch (inotify-fd inotify-instance) wd)
-             (remhash wd hash)) hash)
+  (maphash (lambda (wd path)
+           (declare (ignore path))
+           (c-inotify-rm-watch (inotify-fd inotify-instance) wd)
+           (remhash wd hash)) hash)
   (foreign-free (inotify-buffer inotify-instance))
   (foreign-funcall "close" :int (inotify-fd inotify-instance) :int)))
 
