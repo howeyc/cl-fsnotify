@@ -37,6 +37,3 @@
 
 (define "RAW_EVENT_SIZE" "sizeof(struct inotify_event)")
 (constant (raw-event-size   "RAW_EVENT_SIZE"))
-
-(define "EVENT_SIZE" "(sizeof(struct inotify_event) + NAME_MAX + 1)")
-(constant (event-size       "EVENT_SIZE"))

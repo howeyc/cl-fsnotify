@@ -70,12 +70,14 @@
             (len        :uint32)
             (name       :char))
 
+(defconstant +buffer-size+ 4096)
+
 (defun open-inotify ()
  (make-instance 'inotify-tracker
   :fd (c-inotify-init o-nonblock)
   :path-hash (make-hash-table :test 'equal)
   :wd-hash (make-hash-table :test 'equal)
-  :buffer (foreign-alloc :char :count event-size)))
+  :buffer (foreign-alloc :char :count +buffer-size+)))
 
 (defun close-inotify (inotify-instance)
  (let ((hash (inotify-wd-hash inotify-instance)))
@@ -103,7 +105,7 @@
   (let ((buffer (inotify-buffer inotify-instance))
         events-queue)
     (loop
-      for read = (foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int event-size :int)
+      for read = (foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int +buffer-size+ :int)
       while (plusp read)
       do (loop
            with offset = 0
