@@ -123,7 +123,8 @@
                         (let ((queue (list (list result))))
                           (setf (cdr queue) (car queue)
                                 events-queue queue)))))
-                (incf offset (+ raw-event-size len))))
+                (incf offset (+ raw-event-size len))
+                (setf offset-buffer (inc-pointer buffer offset))))
       finally (return (car events-queue)))))
 
 (defmacro with-inotify ((name) &body body)
