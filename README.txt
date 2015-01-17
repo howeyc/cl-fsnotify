@@ -10,7 +10,7 @@ Released under the ISC License.
 |   Common Lisp   |      Operating Systems      |
 | Implementations | BSD | OSX | Linux | Windows |
 ------------------------------------------------|
-| CCL             |  Y  |     |   Y   |         |
+| CCL             |  Y  |  Y  |   Y   |         |
 ------------------------------------------------|
 | SBCL            |  Y  |  Y  |   Y   |         |
 |===============================================|
