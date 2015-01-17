@@ -12,14 +12,12 @@ Released under the ISC License.
 ------------------------------------------------|
 | CCL             |  Y  |     |   Y   |         |
 ------------------------------------------------|
-| SBCL            |  Y  |     |   Y   |         |
+| SBCL            |  Y  |  Y  |   Y   |         |
 |===============================================|
 
 
 Future Plans:
 - Expose fsnotify instance so you can have multiple open at a time.
-- Figure out what feature to use to get OSX support, as it has same
-  kqueue API as BSD systems.
 - Windows Support
 
 
