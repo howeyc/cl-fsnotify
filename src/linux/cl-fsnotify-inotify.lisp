@@ -70,18 +70,21 @@
             (len        :uint32)
             (name       :char))
 
+(defconstant +buffer-size+ 4096)
+
 (defun open-inotify ()
  (make-instance 'inotify-tracker
   :fd (c-inotify-init o-nonblock)
   :path-hash (make-hash-table :test 'equal)
   :wd-hash (make-hash-table :test 'equal)
-  :buffer (foreign-alloc :char :count event-size)))
+  :buffer (foreign-alloc :char :count +buffer-size+)))
 
 (defun close-inotify (inotify-instance)
  (let ((hash (inotify-wd-hash inotify-instance)))
-  (maphash #'(lambda (wd path) 
-             (c-inotify-rm-watch (inotify-fd inotify-instance) wd)
-             (remhash wd hash)) hash)
+  (maphash (lambda (wd path)
+           (declare (ignore path))
+           (c-inotify-rm-watch (inotify-fd inotify-instance) wd)
+           (remhash wd hash)) hash)
   (foreign-free (inotify-buffer inotify-instance))
   (foreign-funcall "close" :int (inotify-fd inotify-instance) :int)))
 
@@ -98,19 +101,30 @@
    (remhash path (inotify-path-hash inotify-instance))
    (remhash wd (inotify-wd-hash inotify-instance)))))
 
-(defun get-event (inotify-instance)
- (let ((buffer (inotify-buffer inotify-instance)))
-  (when (plusp (foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int event-size :int))
-    (with-foreign-slots ((wd mask len) buffer struct-inotify-event)
-      (let ((name (if (plusp len)
-                   (foreign-string-to-lisp (foreign-slot-pointer buffer '(:struct struct-inotify-event) 'name) :max-chars len)
-                   "")))
-       (cons (concatenate 'string (gethash wd (inotify-wd-hash inotify-instance)) name) (foreign-bitfield-symbols 'inotify-flag mask)))))))
-
 (defun get-events (inotify-instance)
-  (loop as event = (get-event inotify-instance)
-        while event
-        collect event))
+  (let ((buffer (inotify-buffer inotify-instance))
+        events-queue)
+    (loop
+      for read = (foreign-funcall "read" :int (inotify-fd inotify-instance) :pointer buffer :int +buffer-size+ :int)
+      while (plusp read)
+      do (loop
+           with offset = 0
+           with offset-buffer = (inc-pointer buffer offset)
+           while (< offset read)
+           do (with-foreign-slots ((wd mask len) offset-buffer (:struct struct-inotify-event))
+                (let ((name (if (plusp len)
+                                (foreign-string-to-lisp (foreign-slot-pointer offset-buffer '(:struct struct-inotify-event) 'name) :max-chars len)
+                                "")))
+                  (let ((result (cons (concatenate 'string (gethash wd (inotify-wd-hash inotify-instance)) name) (foreign-bitfield-symbols 'inotify-flag mask))))
+                    (if events-queue
+                        (let ((cons (list result)))
+                          (setf (cddr events-queue) cons
+                                (cdr events-queue) cons))
+                        (let ((queue (list (list result))))
+                          (setf (cdr queue) (car queue)
+                                events-queue queue)))))
+                (incf offset (+ raw-event-size len))))
+      finally (return (car events-queue)))))
 
 (defmacro with-inotify ((name) &body body)
  `(let ((,name (open-inotify)))
